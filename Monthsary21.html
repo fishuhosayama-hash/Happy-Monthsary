@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>I love you soo much Riley</title>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #1a1025 url('sakura.gif') no-repeat center center fixed;
+      background-size: cover;
+      min-height: 100vh;
+      overflow-x: hidden;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      padding: 30px 15px 80px 15px;
+      position: relative;
+    }
+
+    .orb-left, .orb-right {
+      position: fixed;
+      top: 30%;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      filter: blur(90px);
+      z-index: 2;
+      pointer-events: none;
+      animation: orbPulse 6s ease-in-out infinite alternate;
+    }
+    .orb-left { left: -100px; background: rgba(255, 45, 106, 0.25); }
+    .orb-right { right: -100px; background: rgba(186, 85, 211, 0.25); }
+
+    @keyframes orbPulse {
+      0% { transform: scale(1); opacity: 0.5; }
+      100% { transform: scale(1.3); opacity: 0.9; }
+    }
+
+    .bg-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 10, 25, 0.35);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    #overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(25, 15, 35, 0.95);
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+
+    .open-btn {
+      background: #ff2d6a;
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 20px 40px;
+      font-size: 22px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(255, 45, 106, 0.5);
+      animation: heartPulse 1.5s infinite;
+    }
+
+    .container {
+      text-align: center;
+      z-index: 10;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .bear-wrapper {
+      display: inline-block;
+      cursor: pointer;
+    }
+
+    .bear {
+      width: 210px;
+      height: 210px;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.5));
+      animation: gentleFloat 3.5s ease-in-out infinite;
+      transition: transform 0.2s ease;
+      pointer-events: none;
+    }
+
+    .bear-wrapper:active .bear {
+      transform: scale(0.92);
+    }
+
+    .shimmer-text {
+      background: linear-gradient(90deg, #ffffff 0%, #ffb3c6 50%, #ffffff 100%);
+      background-size: 200% auto;
+      color: transparent;
+      -webkit-background-clip: text;
+      background-clip: text;
+      animation: shine 3s linear infinite;
+    }
+
+    @keyframes shine {
+      to { background-position: 200% center; }
+    }
+
+    .text {
+      margin-top: 10px;
+      font-size: 26px;
+      text-shadow: 0 0 10px #ff2d6a, 0 0 20px #ff2d6a;
+      font-weight: bold;
+    }
+
+    .card-container {
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      height: 480px;
+      z-index: 20;
+      perspective: 1200px;
+      margin-bottom: 50px;
+    }
+
+    .envelope {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 77, 121, 0.92);
+      backdrop-filter: blur(8px);
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 45, 106, 0.6);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      overflow: hidden;
+      transform-style: preserve-3d;
+      transform-origin: top center;
+      transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s ease;
+    }
+
+    .envelope.open-3d {
+      transform: rotateX(-110deg) translateY(-50px);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .letter-card {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3), 0 0 25px rgba(255, 105, 180, 0.4);
+      border: 2px solid #ffe6f0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      opacity: 0;
+      transform: translateY(60px) scale(0.9);
+      transition: transform 0.15s ease-out, opacity 0.6s ease;
+      pointer-events: none;
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+
+    .letter-card.slide-out {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .folder-glow-heart {
+      position: absolute;
+      color: #ffb3c6;
+      font-size: 24px;
+      animation: floatGlowHeart 3s infinite ease-in-out;
+      pointer-events: none;
+      text-shadow: 0 0 10px #ff2d6a, 0 0 20px #ff2d6a;
+    }
+
+    .letter-content {
+      color: #ff2d6a;
+      font-size: 16.5px;
+      line-height: 1.7;
+      overflow-y: auto;
+      height: 350px;
+      padding-right: 10px;
+    }
+
+    .card-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 15px;
+      padding-top: 12px;
+      border-top: 1px solid #ffe6f0;
+    }
+
+    .nav-btn {
+      background: #ff4d79;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .nav-btn:disabled {
+      background: #ffd1dc;
+      cursor: not-allowed;
+    }
+
+    .page-indicator {
+      color: #ff2d6a;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .open-when-section {
+      width: 100%;
+      max-width: 800px;
+      z-index: 20;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    .open-when-title {
+      font-size: 24px;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px #ff2d6a;
+    }
+
+    .open-when-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 15px;
+      justify-items: center;
+    }
+
+    .open-when-card {
+      background: rgba(255, 255, 255, 0.9);
+      border: 2px solid #ff4d79;
+      border-radius: 15px;
+      padding: 20px 15px;
+      width: 100%;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .open-when-card:hover {
+      transform: translateY(-8px) scale(1.03);
+      box-shadow: 0 12px 25px rgba(255, 45, 106, 0.5);
+    }
+
+    .open-when-icon {
+      font-size: 36px;
+    }
+
+    .open-when-label {
+      color: #ff2d6a;
+      font-weight: bold;
+      font-size: 14px;
+      line-height: 1.3;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(5px);
+      z-index: 2000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-content {
+      background: #ffffff;
+      border: 3px solid #ff4d79;
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 500px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 15px 35px rgba(255, 45, 106, 0.4);
+      transform: scale(0.8);
+      transition: transform 0.4s ease;
+      position: relative;
+    }
+
+    .modal-overlay.active .modal-content {
+      transform: scale(1);
+    }
+
+    .modal-title {
+      color: #ff2d6a;
+      font-size: 20px;
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
+
+    .modal-body {
+      color: #444;
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .modal-close-btn {
+      background: #ff2d6a;
+      color: white;
+      border: none;
+      padding: 10px 25px;
+      border-radius: 25px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(255, 45, 106, 0.4);
+    }
+
+    .game-widget {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 2px solid #ff2d6a;
+      border-radius: 50px;
+      padding: 8px 18px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .game-btn {
+      background: #ff2d6a;
+      border: none;
+      color: white;
+      font-weight: bold;
+      font-size: 13px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .game-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .score-display {
+      color: #ff2d6a;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .falling-game-heart {
+      position: fixed;
+      font-size: 28px;
+      cursor: pointer;
+      user-select: none;
+      z-index: 999;
+      animation: fallDown linear forwards;
+    }
+
+    @keyframes fallDown {
+      0% { top: -40px; opacity: 1; }
+      100% { top: 105vh; opacity: 0; }
+    }
+
+    .music-widget {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 2px solid #ff2d6a;
+      border-radius: 50px;
+      padding: 8px 18px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .music-btn {
+      background: transparent;
+      border: none;
+      color: #ff2d6a;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .visualizer {
+      display: flex;
+      align-items: flex-end;
+      gap: 3px;
+      height: 16px;
+    }
+
+    .bar {
+      width: 3px;
+      background: #ff2d6a;
+      border-radius: 3px;
+      height: 4px;
+    }
+
+    .visualizer.playing .bar {
+      animation: bounce 0.6s ease-in-out infinite alternate;
+    }
+
+    .visualizer.playing .bar:nth-child(1) { animation-delay: 0.1s; }
+    .visualizer.playing .bar:nth-child(2) { animation-delay: 0.3s; }
+    .visualizer.playing .bar:nth-child(3) { animation-delay: 0.2s; }
+    .visualizer.playing .bar:nth-child(4) { animation-delay: 0.4s; }
+
+    @keyframes bounce {
+      0% { height: 4px; }
+      100% { height: 16px; }
+    }
+
+    .side-widget-left {
+      position: fixed;
+      left: 30px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 20px 15px;
+      border-radius: 20px;
+      color: white;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      z-index: 50;
+      width: 220px;
+    }
+    .side-widget-left h3 {
+      font-size: 13px;
+      margin-bottom: 8px;
+      color: #ffb3c6;
+    }
+    .counter-number {
+      font-size: 20px;
+      font-weight: bold;
+      color: #fff;
+      text-shadow: 0 0 10px #ff2d6a;
+      line-height: 1.3;
+    }
+    .counter-sub {
+      font-size: 12px;
+      margin-top: 6px;
+      opacity: 0.9;
+    }
+
+    .side-widget-right {
+      position: fixed;
+      right: 40px;
+      top: 45%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      z-index: 50;
+    }
+    .polaroid {
+      background: white;
+      padding: 10px 10px 25px 10px;
+      border-radius: 8px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+      transform: rotate(-5deg);
+      transition: transform 0.3s ease, z-index 0.3s;
+      cursor: pointer;
+      width: 140px;
+      text-align: center;
+    }
+    .polaroid:nth-child(2) {
+      transform: rotate(6deg);
+    }
+    .polaroid:hover {
+      transform: scale(1.15) rotate(0deg);
+      z-index: 60;
+    }
+    .polaroid img {
+      width: 100%;
+      height: 110px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+    .polaroid span {
+      color: #333;
+      font-size: 12px;
+      font-weight: bold;
+      margin-top: 6px;
+      display: block;
+    }
+
+    .floating-heart-btn {
+      position: fixed;
+      bottom: -30px;
+      font-size: 24px;
+      cursor: pointer;
+      user-select: none;
+      z-index: 30;
+      animation: floatUp 8s linear infinite;
+    }
+    
+    .bg-letter {
+      position: fixed;
+      bottom: -40px;
+      font-size: 22px;
+      opacity: 0.35;
+      pointer-events: none;
+      z-index: 2;
+      animation: floatUp 12s linear infinite;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) rotate(0deg); opacity: 0.35; }
+      100% { transform: translateY(-105vh) rotate(360deg); opacity: 0; }
+    }
+
+    .burst-sparkle {
+      position: fixed;
+      pointer-events: none;
+      font-size: 16px;
+      z-index: 99;
+      animation: burst 0.8s ease-out forwards;
+    }
+    @keyframes burst {
+      0% { opacity: 1; transform: translate(0, 0) scale(1); }
+      100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(1.8); }
+    }
+
+    @keyframes rippleOut {
+      to {
+        width: 80px;
+        height: 80px;
+        opacity: 0;
+      }
+    }
+
+    .cursor-sparkle {
+      position: fixed;
+      pointer-events: none;
+      width: 14px;
+      height: 14px;
+      background: radial-gradient(circle, #ffffff 10%, #ff69b4 60%, #ff2d6a 100%);
+      border-radius: 50%;
+      box-shadow: 0 0 12px #ff2d6a, 0 0 20px #ffb3c6, 0 0 30px #ff2d6a;
+      z-index: 9999;
+      animation: cursorFade 0.8s ease-out forwards;
+    }
+    @keyframes cursorFade {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.4); }
+      100% { opacity: 0; transform: scale(0.1); }
+    }
+
+    .bear-text-pop {
+      position: fixed;
+      color: #ffffff;
+      font-weight: bold;
+      font-size: 18px;
+      text-shadow: 0 0 10px #ff2d6a, 0 0 20px #ff2d6a;
+      pointer-events: none;
+      z-index: 9999;
+      animation: popFloat 1.2s ease-out forwards;
+    }
+    @keyframes popFloat {
+      0% { opacity: 1; transform: translateY(0) scale(0.8); }
+      50% { opacity: 1; transform: translateY(-30px) scale(1.1); }
+      100% { opacity: 0; transform: translateY(-60px) scale(1); }
+    }
+
+    .shooting-star {
+      position: fixed;
+      width: 120px;
+      height: 2px;
+      background: linear-gradient(90deg, rgba(255,255,255,1), transparent);
+      z-index: 3;
+      pointer-events: none;
+      opacity: 0;
+      animation: shoot 3s ease-in-out infinite;
+    }
+    @keyframes shoot {
+      0% { transform: translate(0, 0) rotate(-35deg); opacity: 0; }
+      10% { opacity: 1; }
+      30% { transform: translate(-400px, 250px) rotate(-35deg); opacity: 0; }
+      100% { opacity: 0; }
+    }
+
+    .sakura-petal {
+      position: fixed;
+      top: -20px;
+      background: linear-gradient(135deg, #ffb7c5, #ffa6b9);
+      border-radius: 100% 0 100% 100%;
+      pointer-events: none;
+      z-index: 5;
+      opacity: 0.8;
+      box-shadow: 0 0 5px rgba(255, 183, 197, 0.6);
+      animation: sakuraFall linear infinite;
+    }
+
+    @keyframes sakuraFall {
+      0% { transform: translateY(0) rotate(0deg) translateX(0); opacity: 0.9; }
+      50% { transform: translateY(50vh) rotate(180deg) translateX(50px); }
+      100% { transform: translateY(105vh) rotate(360deg) translateX(-30px); opacity: 0.2; }
+    }
+
+    @keyframes floatGlowHeart {
+      0%, 100% { transform: translateY(0) scale(1); opacity: 0.4; }
+      50% { transform: translateY(-15px) scale(1.3); opacity: 0.9; }
+    }
+
+    @keyframes heartPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+
+    @keyframes gentleFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .hug-container {
+      margin-top: 15px;
+      text-align: center;
+    }
+
+    .hug-btn {
+      background: #ff2d6a;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 25px;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(255, 45, 106, 0.4);
+      transition: transform 0.2s;
+    }
+
+    .hug-btn:hover {
+      transform: scale(1.05);
+    }
+
+    @media (max-width: 1050px) {
+      .side-widget-left, .side-widget-right {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="orb-left"></div>
+  <div class="orb-right"></div>
+
+  <div class="shooting-star" style="top: 10%; right: 15%; animation-delay: 1s;"></div>
+  <div class="shooting-star" style="top: 20%; right: 5%; animation-delay: 4s;"></div>
+
+  <div class="bg-overlay"></div>
+
+  <div id="overlay">
+    <button class="open-btn" onclick="openCard()">💌 Click to Open My Message ❤️</button>
+  </div>
+
+  <audio id="bgMusic" loop preload="auto">
+    <source src="JVKE-her.mp3.mp3" type="audio/mpeg">
+    <source src="JVKE-her.mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="game-widget">
+    <button class="game-btn" id="gameToggleBtn" onclick="toggleHeartGame()">🎮 Catch Hearts!</button>
+    <div class="score-display" id="gameScoreDisplay" style="display:none;">Score: 0</div>
+  </div>
+
+  <div class="music-widget">
+    <div class="visualizer" id="visualizer">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </div>
+    <button class="music-btn" onclick="toggleMusic()" id="musicToggle">🎶 Pause Music</button>
+  </div>
+
+  <!-- Live Ticking Love Counter Clock Widget -->
+  <div class="side-widget-left">
+    <h3 class="shimmer-text">TIME TOGETHER</h3>
+    <div class="counter-number" id="liveCounter">0d 0h 0m 0s</div>
+    <div class="counter-sub">19 Months & Counting 💕</div>
+  </div>
+
+  <div class="side-widget-right">
+    <div class="polaroid" onclick="createBurst(event)">
+      <img src="bear4.gif" onerror="this.onerror=null; this.src='bear4.jpg';" alt="Memory">
+      <span>Us Forever ❤️</span>
+    </div>
+    <div class="polaroid" onclick="createBurst(event)">
+      <img src="bear.gif" alt="Memory">
+      <span>My Sweetheart 💖</span>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="bear-wrapper" onclick="clickBear(event)">
+      <img class="bear" id="bearImg" src="bear.gif" alt="Cute Bear">
+    </div>
+    <div class="text shimmer-text">I love you soo much Riley ❤️</div>
+  </div>
+
+  <div class="card-container">
+    <div class="envelope" id="envelopeCover" onclick="openLetter()">
+      <div class="folder-glow-heart" style="top: 15%; left: 15%; animation-delay: 0s;">💖</div>
+      <div class="folder-glow-heart" style="top: 20%; right: 15%; animation-delay: 0.8s;">💕</div>
+      <div class="folder-glow-heart" style="bottom: 20%; left: 20%; animation-delay: 1.5s;">💗</div>
+      <div class="folder-glow-heart" style="bottom: 15%; right: 20%; animation-delay: 2.2s;">❤️</div>
+
+      <span style="font-size: 65px; margin-bottom: 10px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.8));">🎁</span>
+      <h2 class="shimmer-text" style="font-size: 22px;">Click to Open Your Folder 💌</h2>
+    </div>
+
+    <div class="letter-card" id="letterCard">
+      <div class="folder-glow-heart" style="top: 10px; right: 15px; animation-delay: 0.5s;">💖</div>
+      <div class="folder-glow-heart" style="bottom: 10px; left: 15px; animation-delay: 1.2s;">💕</div>
+
+      <div class="letter-content" id="letterContent"></div>
+      
+      <div class="card-nav">
+        <button class="nav-btn" id="prevBtn" onclick="changePage(-1)">◄ Prev</button>
+        <span class="page-indicator" id="pageIndicator">Page 1 of 5</span>
+        <button class="nav-btn" id="nextBtn" onclick="changePage(1)">Next ►</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="open-when-section">
+    <h3 class="shimmer-text open-when-title">✉️ Open When... Letters ✉️</h3>
+    <div class="open-when-grid">
+
+      <div class="open-when-card" onclick="openWhenModal('miss')">
+        <span class="open-when-icon">🥺</span>
+        <span class="open-when-label">...You Miss Me</span>
+      </div>
+
+      <div class="open-when-card" onclick="openWhenModal('sad')">
+        <span class="open-when-icon">🌧️</span>
+        <span class="open-when-label">...You feel Sad or Stressed</span>
+      </div>
+
+      <div class="open-when-card" onclick="openWhenModal('sleep')">
+        <span class="open-when-icon">🌙</span>
+        <span class="open-when-label">...You Can't Sleep</span>
+      </div>
+
+      <div class="open-when-card" onclick="openWhenModal('doubt')">
+        <span class="open-when-icon">💖</span>
+        <span class="open-when-label">...You Need a Reminder</span>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="openWhenModal">
+    <div class="modal-content">
+      <div class="modal-title" id="modalTitle">Letter Title</div>
+      <div class="modal-body" id="modalBody">Letter message goes here...</div>
+      <button class="modal-close-btn" onclick="closeWhenModal()">Close Letter ❤️</button>
+    </div>
+  </div>
+
+  <script>
+    /* Live Love Counter Clock Logic */
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - 578);
+    
+    function updateLiveCounter() {
+      const now = new Date();
+      const diffTime = Math.abs(now - startDate);
+      
+      const days = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diffTime / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diffTime / 1000 / 60) % 60);
+      const seconds = Math.floor((diffTime / 1000) % 60);
+
+      document.getElementById("liveCounter").innerText = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    }
+
+    updateLiveCounter();
+    setInterval(updateLiveCounter, 1000);
+
+    const openWhenMessages = {
+      miss: {
+        title: "Open When You Miss Me 🥺",
+        body: "Whenever you feel far away or miss me extra, just close your eyes and remember that I am thinking of you right at this exact moment too. Distance is temporary, but my love for you is forever. I can't wait until I get to hold you for real! 💕"
+      },
+      sad: {
+        title: "Open When You Feel Sad or Stressed 🌧️",
+        body: "Take a deep breath my sweetheart. You are so strong, resilient, and capable. Whatever is stressing you out right now will pass. I am always here in your corner, supporting you, cheering for you, and sending you the biggest, warmest hug right now. Everything will be okay! ❤️"
+      },
+      sleep: {
+        title: "Open When You Can't Sleep 🌙",
+        body: "Rest your head, turn off your thoughts, and relax. Imagine me right next to you, stroking your hair and whispering how much I love you. Sleep peacefully my love, I'll be right here waiting to talk to you tomorrow morning. Sweet dreams! ☁️✨"
+      },
+      doubt: {
+        title: "Open When You Need a Reminder 💖",
+        body: "Just in case you ever forget: You are my absolute favorite person in the entire world. You are beautiful, funny, sweet, and so endlessly loved by me. Thank you for being my wife and my best friend. Never doubt how much you mean to me! 🥰"
+      }
+    };
+
+    function openWhenModal(type) {
+      const modal = document.getElementById("openWhenModal");
+      const title = document.getElementById("modalTitle");
+      const body = document.getElementById("modalBody");
+
+      if (openWhenMessages[type]) {
+        title.innerText = openWhenMessages[type].title;
+        body.innerText = openWhenMessages[type].body;
+        modal.classList.add("active");
+        confetti({ particleCount: 40, spread: 60, origin: { y: 0.5 } });
+      }
+    }
+
+    function closeWhenModal() {
+      document.getElementById("openWhenModal").classList.remove("active");
+    }
+
+    window.addEventListener("click", (e) => {
+      const ripple = document.createElement("div");
+      ripple.style.position = "fixed";
+      ripple.style.left = e.clientX + "px";
+      ripple.style.top = e.clientY + "px";
+      ripple.style.width = "10px";
+      ripple.style.height = "10px";
+      ripple.style.border = "2px solid #ff2d6a";
+      ripple.style.borderRadius = "50%";
+      ripple.style.pointerEvents = "none";
+      ripple.style.transform = "translate(-50%, -50%)";
+      ripple.style.animation = "rippleOut 0.6s ease-out forwards";
+      ripple.style.zIndex = "9999";
+      document.body.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 600);
+    });
+
+    window.addEventListener("mousemove", (e) => {
+      const sparkle = document.createElement("div");
+      sparkle.className = "cursor-sparkle";
+      sparkle.style.left = (e.clientX - 7) + "px";
+      sparkle.style.top = (e.clientY - 7) + "px";
+      document.body.appendChild(sparkle);
+      setTimeout(() => sparkle.remove(), 800);
+    });
+
+    function createBurst(e) {
+      const emojis = ["✨", "💖", "🌸", "💕", "⭐"];
+      for (let i = 0; i < 12; i++) {
+        const p = document.createElement("div");
+        p.className = "burst-sparkle";
+        p.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+        p.style.left = e.clientX + "px";
+        p.style.top = e.clientY + "px";
+        
+        const tx = (Math.random() - 0.5) * 160 + "px";
+        const ty = (Math.random() - 0.5) * 160 + "px";
+        p.style.setProperty("--tx", tx);
+        p.style.setProperty("--ty", ty);
+
+        document.body.appendChild(p);
+        setTimeout(() => p.remove(), 800);
+      }
+    }
+
+    const bearMessages = [
+      "I love you! 💖",
+      "You're my world! 🌎❤️",
+      "Huge Hugs! 🧸",
+      "Forever & Always! ✨",
+      "My Sweetheart! 💕"
+    ];
+
+    function clickBear(e) {
+      createBurst(e);
+      const msg = document.createElement("div");
+      msg.className = "bear-text-pop";
+      msg.innerText = bearMessages[Math.floor(Math.random() * bearMessages.length)];
+      msg.style.left = (e.clientX - 40) + "px";
+      msg.style.top = (e.clientY - 20) + "px";
+      document.body.appendChild(msg);
+      setTimeout(() => msg.remove(), 1200);
+    }
+
+    function spawnFloatingHeart() {
+      const heart = document.createElement("div");
+      heart.className = "floating-heart-btn";
+      heart.innerText = ["💖", "💗", "💕", "❤️", "🌸"][Math.floor(Math.random() * 5)];
+      heart.style.left = Math.random() * 90 + "vw";
+      heart.style.animationDuration = (Math.random() * 4 + 6) + "s";
+      heart.onclick = (e) => {
+        createBurst(e);
+        heart.remove();
+      };
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 10000);
+    }
+    setInterval(spawnFloatingHeart, 1500);
+
+    function spawnBgLetter() {
+      const bgLetter = document.createElement("div");
+      bgLetter.className = "bg-letter";
+      bgLetter.innerText = ["💌", "✉️", "📜", "🕊️"][Math.floor(Math.random() * 4)];
+      bgLetter.style.left = Math.random() * 95 + "vw";
+      bgLetter.style.animationDuration = (Math.random() * 5 + 9) + "s";
+      document.body.appendChild(bgLetter);
+      setTimeout(() => bgLetter.remove(), 14000);
+    }
+    setInterval(spawnBgLetter, 2000);
+
+    const bears = [
+      "bear.gif", 
+      "bear2.gif", 
+      "bear3.gif", 
+      "bear4.gif", 
+      "bear5.gif"  
+    ];
+
+    const pages = [
+      "<h2>For My Loving Wife Riley ❤️</h2><br><p>Happy 1 year and 7 months my precious love!</p><br><p>I created this special message just for you to celebrate our 19 beautiful months together. Click 'Next' to read my letter! 📖✨</p>",
+      
+      "<p><strong>Happy 1 year and 7 months my precious love!</strong></p><br><p>I still cannot believe we have been together for nineteen beautiful months already. Time seems to fly by so fast, yet every single month with you feels like a total gift. Looking back on everything we have built, I am constantly reminded of just how blessed I am to have you by my side. My love for you grows deeper every single day, and honestly, I still get the biggest smile on my face whenever I get to talk to you.</p>",
+      
+      "<p>Thank you for bringing so much warmth, comfort, and genuine happiness into my life. You have become my absolute safe haven—the person I run to whether I am having a bad day or just need a gentle reminder that I am loved. You make me feel cherished in a way I never want to let go of.</p><br><p>Thank you for your endless patience with me, especially during my grumpy or extra sensitive moments. I know I can be a handful sometimes, and I am so sorry for the times I make things tough for us. You never fail to wrap me in your love and comfort me when I need it most.</p>",
+      
+      "<p>These nineteen months are filled with memories I will hold close to my heart forever. Our late night talks, the random inside jokes, our silly little moments, our cozy good morning and goodnight texts, and even the ache of missing each other.</p><br><p>I catch myself dreaming more and more about the day we finally get to be together for good. I cannot wait to wake up to your sweet face every morning, fall asleep with you in my arms every night, and shower you with endless forehead kisses and cuddles whenever I want.</p>",
+      
+      "<p>Thank you for choosing me every single day, for never giving up on us, and for loving me so unconditionally. You are my favorite person, my safest place, my happy thought, and my home. I promise to keep giving you my best and loving you with everything I have.</p><br><p>Happy 1 year and 7 months my beloved Riley! I love you more than words could ever express.</p><br><p style='text-align:center;'><strong>Forever and always yours,<br>Your husband Rio hehe ❤️</strong></p><div class='hug-container'><button class='hug-btn' onclick='sendHug()'>🤗 Send a Hug Back to Rio! ❤️</button></div>"
+    ];
+
+    let currentPage = 0;
+    let typingTimer = null;
+    const audio = document.getElementById("bgMusic");
+    const overlay = document.getElementById("overlay");
+    const musicBtn = document.getElementById("musicToggle");
+    const visualizer = document.getElementById("visualizer");
+
+    function openCard() {
+      overlay.style.opacity = "0";
+      overlay.style.pointerEvents = "none";
+      setTimeout(() => { 
+        overlay.style.visibility = "hidden"; 
+        overlay.style.display = "none";
+      }, 800);
+      audio.play().then(() => {
+        visualizer.classList.add("playing");
+      }).catch(err => console.log("Audio play error:", err));
+    }
+
+    function openLetter() {
+      const env = document.getElementById("envelopeCover");
+      const card = document.getElementById("letterCard");
+
+      env.classList.add("open-3d");
+      
+      setTimeout(() => {
+        card.classList.add("slide-out");
+        renderPage();
+      }, 300);
+    }
+
+    const cardElement = document.getElementById("letterCard");
+
+    cardElement.addEventListener("mousemove", (e) => {
+      if (!cardElement.classList.contains("slide-out")) return;
+      const rect = cardElement.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      cardElement.style.transform = `perspective(1000px) rotateY(${x / 30}deg) rotateX(${-y / 30}deg)`;
+    });
+
+    cardElement.addEventListener("mouseleave", () => {
+      if (!cardElement.classList.contains("slide-out")) return;
+      cardElement.style.transform = "perspective(1000px) rotateY(0deg) rotateX(0deg)";
+    });
+
+    function typeWriterEffect(htmlContent) {
+      const container = document.getElementById("letterContent");
+      container.innerHTML = "";
+      
+      let index = 0;
+      let isTag = false;
+      let currentHTML = "";
+
+      if (typingTimer) clearInterval(typingTimer);
+
+      typingTimer = setInterval(() => {
+        if (index >= htmlContent.length) {
+          clearInterval(typingTimer);
+          container.innerHTML = htmlContent;
+          return;
+        }
+
+        let char = htmlContent[index];
+
+        if (char === '<') isTag = true;
+        
+        currentHTML += char;
+        
+        if (char === '>') isTag = false;
+
+        if (!isTag) {
+          container.innerHTML = currentHTML;
+        }
+
+        index++;
+      }, 12);
+    }
+
+    function renderPage() {
+      typeWriterEffect(pages[currentPage]);
+      const bearImgEl = document.getElementById("bearImg");
+      
+      bearImgEl.onerror = function() {
+        this.onerror = null;
+        this.src = "bear4.jpg";
+      };
+      bearImgEl.src = bears[currentPage];
+
+      document.getElementById("pageIndicator").innerText = `Page ${currentPage + 1} of ${pages.length}`;
+      document.getElementById("prevBtn").disabled = currentPage === 0;
+      document.getElementById("nextBtn").disabled = currentPage === pages.length - 1;
+    }
+
+    function changePage(direction) {
+      currentPage += direction;
+      renderPage();
+    }
+
+    function toggleMusic() {
+      if (audio.paused) {
+        audio.play();
+        musicBtn.innerHTML = "🎶 Pause Music";
+        visualizer.classList.add("playing");
+      } else {
+        audio.pause();
+        musicBtn.innerHTML = "🎵 Play Music";
+        visualizer.classList.remove("playing");
+      }
+    }
+
+    function sendHug() {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+    }
+
+    function createSakuraPetal() {
+      const petal = document.createElement("div");
+      petal.className = "sakura-petal";
+      
+      const size = Math.random() * 8 + 10;
+      petal.style.width = size + "px";
+      petal.style.height = (size * 1.3) + "px";
+      
+      petal.style.left = Math.random() * 100 + "vw";
+      petal.style.animationDuration = (Math.random() * 5 + 5) + "s";
+      
+      document.body.appendChild(petal);
+      setTimeout(() => petal.remove(), 10000);
+    }
+
+    setInterval(createSakuraPetal, 250);
+
+    let gameActive = false;
+    let score = 0;
+    let gameInterval = null;
+
+    function toggleHeartGame() {
+      const toggleBtn = document.getElementById("gameToggleBtn");
+      const scoreDisp = document.getElementById("gameScoreDisplay");
+      
+      gameActive = !gameActive;
+      
+      if (gameActive) {
+        score = 0;
+        scoreDisp.innerText = "Score: 0";
+        scoreDisp.style.display = "block";
+        toggleBtn.innerText = "🛑 Stop Game";
+        gameInterval = setInterval(spawnGameHeart, 700);
+      } else {
+        clearInterval(gameInterval);
+        scoreDisp.style.display = "none";
+        toggleBtn.innerText = "🎮 Catch Hearts!";
+        document.querySelectorAll('.falling-game-heart').forEach(h => h.remove());
+      }
+    }
+
+    function spawnGameHeart() {
+      if (!gameActive) return;
+      const heart = document.createElement("div");
+      heart.className = "falling-game-heart";
+      heart.innerText = ["💖", "💗", "💕", "❤️", "💌"][Math.floor(Math.random() * 5)];
+      heart.style.left = Math.random() * 85 + 5 + "vw";
+      
+      const duration = Math.random() * 2.5 + 2.5;
+      heart.style.animationDuration = duration + "s";
+      
+      heart.onclick = (e) => {
+        score += 10;
+        document.getElementById("gameScoreDisplay").innerText = "Score: " + score;
+        createBurst(e);
+        heart.remove();
+        
+        if (score % 50 === 0) {
+          confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } });
+        }
+      };
+
+      document.body.appendChild(heart);
+      setTimeout(() => { if (heart.parentNode) heart.remove(); }, duration * 1000);
+    }
+  </script>
+</body>
+</html>
