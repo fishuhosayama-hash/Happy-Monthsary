@@ -12,8 +12,33 @@
       box-sizing: border-box;
     }
 
+    /* Base Body with Theme Variables */
+    :root {
+      --bg-color: #1a1025;
+      --bg-img: url('sakura.gif');
+      --accent-color: #ff2d6a;
+      --orb-left-color: rgba(255, 45, 106, 0.25);
+      --orb-right-color: rgba(186, 85, 211, 0.25);
+    }
+
+    body.theme-starry {
+      --bg-color: #0d1117;
+      --bg-img: none;
+      --accent-color: #a370f7;
+      --orb-left-color: rgba(120, 80, 255, 0.3);
+      --orb-right-color: rgba(0, 210, 255, 0.25);
+    }
+
+    body.theme-sunset {
+      --bg-color: #2b111e;
+      --bg-img: none;
+      --accent-color: #ff6b4a;
+      --orb-left-color: rgba(255, 107, 74, 0.3);
+      --orb-right-color: rgba(255, 195, 0, 0.3);
+    }
+
     body {
-      background: #1a1025 url('sakura.gif') no-repeat center center fixed;
+      background: var(--bg-color) var(--bg-img) no-repeat center center fixed;
       background-size: cover;
       min-height: 100vh;
       overflow-x: hidden;
@@ -24,6 +49,7 @@
       align-items: center;
       padding: 30px 15px 80px 15px;
       position: relative;
+      transition: background 0.5s ease;
     }
 
     .orb-left, .orb-right {
@@ -37,8 +63,8 @@
       pointer-events: none;
       animation: orbPulse 6s ease-in-out infinite alternate;
     }
-    .orb-left { left: -100px; background: rgba(255, 45, 106, 0.25); }
-    .orb-right { right: -100px; background: rgba(186, 85, 211, 0.25); }
+    .orb-left { left: -100px; background: var(--orb-left-color); }
+    .orb-right { right: -100px; background: var(--orb-right-color); }
 
     @keyframes orbPulse {
       0% { transform: scale(1); opacity: 0.5; }
@@ -71,7 +97,7 @@
     }
 
     .open-btn {
-      background: #ff2d6a;
+      background: var(--accent-color);
       color: white;
       border: none;
       border-radius: 50px;
@@ -79,8 +105,35 @@
       font-size: 22px;
       font-weight: bold;
       cursor: pointer;
-      box-shadow: 0 10px 25px rgba(255, 45, 106, 0.5);
+      box-shadow: 0 10px 25px var(--accent-color);
       animation: heartPulse 1.5s infinite;
+    }
+
+    /* Theme Switcher Widget */
+    .theme-switcher {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 100;
+      display: flex;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      padding: 6px 12px;
+      border-radius: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .theme-btn {
+      background: transparent;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .theme-btn:hover {
+      transform: scale(1.2);
     }
 
     .container {
@@ -125,7 +178,7 @@
     .text {
       margin-top: 10px;
       font-size: 26px;
-      text-shadow: 0 0 10px #ff2d6a, 0 0 20px #ff2d6a;
+      text-shadow: 0 0 10px var(--accent-color), 0 0 20px var(--accent-color);
       font-weight: bold;
     }
 
@@ -202,11 +255,11 @@
       font-size: 24px;
       animation: floatGlowHeart 3s infinite ease-in-out;
       pointer-events: none;
-      text-shadow: 0 0 10px #ff2d6a, 0 0 20px #ff2d6a;
+      text-shadow: 0 0 10px var(--accent-color), 0 0 20px var(--accent-color);
     }
 
     .letter-content {
-      color: #ff2d6a;
+      color: var(--accent-color);
       font-size: 16.5px;
       line-height: 1.7;
       overflow-y: auto;
@@ -224,7 +277,7 @@
     }
 
     .nav-btn {
-      background: #ff4d79;
+      background: var(--accent-color);
       color: white;
       border: none;
       padding: 10px 20px;
@@ -241,7 +294,7 @@
     }
 
     .page-indicator {
-      color: #ff2d6a;
+      color: var(--accent-color);
       font-weight: bold;
       font-size: 14px;
     }
@@ -257,7 +310,7 @@
     .open-when-title {
       font-size: 24px;
       margin-bottom: 20px;
-      text-shadow: 0 0 10px #ff2d6a;
+      text-shadow: 0 0 10px var(--accent-color);
     }
 
     .open-when-grid {
@@ -269,7 +322,7 @@
 
     .open-when-card {
       background: rgba(255, 255, 255, 0.9);
-      border: 2px solid #ff4d79;
+      border: 2px solid var(--accent-color);
       border-radius: 15px;
       padding: 20px 15px;
       width: 100%;
@@ -284,7 +337,7 @@
 
     .open-when-card:hover {
       transform: translateY(-8px) scale(1.03);
-      box-shadow: 0 12px 25px rgba(255, 45, 106, 0.5);
+      box-shadow: 0 12px 25px var(--accent-color);
     }
 
     .open-when-icon {
@@ -292,7 +345,7 @@
     }
 
     .open-when-label {
-      color: #ff2d6a;
+      color: var(--accent-color);
       font-weight: bold;
       font-size: 14px;
       line-height: 1.3;
@@ -322,13 +375,13 @@
 
     .modal-content {
       background: #ffffff;
-      border: 3px solid #ff4d79;
+      border: 3px solid var(--accent-color);
       border-radius: 20px;
       padding: 30px;
       max-width: 500px;
       width: 90%;
       text-align: center;
-      box-shadow: 0 15px 35px rgba(255, 45, 106, 0.4);
+      box-shadow: 0 15px 35px var(--accent-color);
       transform: scale(0.8);
       transition: transform 0.4s ease;
       position: relative;
@@ -339,7 +392,7 @@
     }
 
     .modal-title {
-      color: #ff2d6a;
+      color: var(--accent-color);
       font-size: 20px;
       margin-bottom: 15px;
       font-weight: bold;
@@ -353,14 +406,14 @@
     }
 
     .modal-close-btn {
-      background: #ff2d6a;
+      background: var(--accent-color);
       color: white;
       border: none;
       padding: 10px 25px;
       border-radius: 25px;
       font-weight: bold;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(255, 45, 106, 0.4);
+      box-shadow: 0 4px 12px var(--accent-color);
     }
 
     .game-widget {
@@ -372,14 +425,14 @@
       align-items: center;
       gap: 12px;
       background: rgba(255, 255, 255, 0.9);
-      border: 2px solid #ff2d6a;
+      border: 2px solid var(--accent-color);
       border-radius: 50px;
       padding: 8px 18px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
 
     .game-btn {
-      background: #ff2d6a;
+      background: var(--accent-color);
       border: none;
       color: white;
       font-weight: bold;
@@ -395,7 +448,7 @@
     }
 
     .score-display {
-      color: #ff2d6a;
+      color: var(--accent-color);
       font-weight: bold;
       font-size: 14px;
     }
@@ -423,7 +476,7 @@
       align-items: center;
       gap: 10px;
       background: rgba(255, 255, 255, 0.9);
-      border: 2px solid #ff2d6a;
+      border: 2px solid var(--accent-color);
       border-radius: 50px;
       padding: 8px 18px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
@@ -432,7 +485,7 @@
     .music-btn {
       background: transparent;
       border: none;
-      color: #ff2d6a;
+      color: var(--accent-color);
       font-weight: bold;
       font-size: 14px;
       cursor: pointer;
@@ -447,7 +500,7 @@
 
     .bar {
       width: 3px;
-      background: #ff2d6a;
+      background: var(--accent-color);
       border-radius: 3px;
       height: 4px;
     }
@@ -491,7 +544,7 @@
       font-size: 20px;
       font-weight: bold;
       color: #fff;
-      text-shadow: 0 0 10px #ff2d6a;
+      text-shadow: 0 0 10px var(--accent-color);
       line-height: 1.3;
     }
     .counter-sub {
@@ -592,9 +645,9 @@
       pointer-events: none;
       width: 14px;
       height: 14px;
-      background: radial-gradient(circle, #ffffff 10%, #ff69b4 60%, #ff2d6a 100%);
+      background: radial-gradient(circle, #ffffff 10%, #ff69b4 60%, var(--accent-color) 100%);
       border-radius: 50%;
-      box-shadow: 0 0 12px #ff2d6a, 0 0 20px #ffb3c6, 0 0 30px #ff2d6a;
+      box-shadow: 0 0 12px var(--accent-color), 0 0 20px #ffb3c6, 0 0 30px var(--accent-color);
       z-index: 9999;
       animation: cursorFade 0.8s ease-out forwards;
     }
@@ -609,7 +662,7 @@
       color: #ffffff;
       font-weight: bold;
       font-size: 18px;
-      text-shadow: 0 0 10px #ff2d6a, 0 0 20px #ff2d6a;
+      text-shadow: 0 0 10px var(--accent-color), 0 0 20px var(--accent-color);
       pointer-events: none;
       z-index: 9999;
       animation: popFloat 1.2s ease-out forwards;
@@ -676,7 +729,7 @@
     }
 
     .hug-btn {
-      background: #ff2d6a;
+      background: var(--accent-color);
       color: white;
       border: none;
       padding: 10px 20px;
@@ -684,7 +737,7 @@
       font-weight: bold;
       font-size: 14px;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(255, 45, 106, 0.4);
+      box-shadow: 0 4px 12px var(--accent-color);
       transition: transform 0.2s;
     }
 
@@ -700,6 +753,13 @@
   </style>
 </head>
 <body>
+
+  <!-- Theme Switcher Top Right Bar -->
+  <div class="theme-switcher">
+    <button class="theme-btn" onclick="setTheme('sakura')" title="Sakura Theme">🌸</button>
+    <button class="theme-btn" onclick="setTheme('starry')" title="Starry Night Theme">🌙</button>
+    <button class="theme-btn" onclick="setTheme('sunset')" title="Sunset Gold Theme">🌅</button>
+  </div>
 
   <div class="orb-left"></div>
   <div class="orb-right"></div>
@@ -819,6 +879,14 @@
   </div>
 
   <script>
+    /* Custom Theme Switcher Logic */
+    function setTheme(themeName) {
+      document.body.className = '';
+      if (themeName !== 'sakura') {
+        document.body.classList.add('theme-' + themeName);
+      }
+    }
+
     /* Live Love Counter Clock Logic */
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - 578);
@@ -854,6 +922,10 @@
       doubt: {
         title: "Open When You Need a Reminder 💖",
         body: "Just in case you ever forget: You are my absolute favorite person in the entire world. You are beautiful, funny, sweet, and so endlessly loved by me. Thank you for being my wife and my best friend. Never doubt how much you mean to me! 🥰"
+      },
+      easterEgg: {
+        title: "🎉 SECRET EASTER EGG UNLOCKED! 💖",
+        body: "You found the hidden secret! You tap on my bear just like you tap on my heart every day. You're the most amazing wife, and I am so lucky to have you. I love you infinitely, Riley! 👑✨"
       }
     };
 
@@ -927,6 +999,10 @@
       "My Sweetheart! 💕"
     ];
 
+    /* Secret Konami Code / Rapid Tap Trigger */
+    let bearClickCount = 0;
+    let bearClickTimer = null;
+
     function clickBear(e) {
       createBurst(e);
       const msg = document.createElement("div");
@@ -936,6 +1012,17 @@
       msg.style.top = (e.clientY - 20) + "px";
       document.body.appendChild(msg);
       setTimeout(() => msg.remove(), 1200);
+
+      bearClickCount++;
+      clearTimeout(bearClickTimer);
+
+      if (bearClickCount >= 5) {
+        bearClickCount = 0;
+        confetti({ particleCount: 150, spread: 100, origin: { y: 0.5 } });
+        openWhenModal('easterEgg');
+      } else {
+        bearClickTimer = setTimeout(() => { bearClickCount = 0; }, 2000);
+      }
     }
 
     function spawnFloatingHeart() {
